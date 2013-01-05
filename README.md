@@ -1,6 +1,6 @@
 # lein-s3-repo
 
-A Leiningen plugin to do many wonderful things.
+A Leiningen plugin to deploy 3rd party jars to an s3 repository.
 
 ## Usage
 
@@ -20,6 +20,6 @@ FIXME: and add an example usage that actually makes sense:
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Brian Rowe
 
 Distributed under the Eclipse Public License, the same as Clojure.
