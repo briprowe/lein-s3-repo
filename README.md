@@ -16,7 +16,14 @@ Example usage:
               :coords '[com.acme/product \"1.0.0\"]' :jar-filename product.jar \\
               :pom-filename pom.xml
 
-NOTE: The `:pom-filename` argument is optional. 
+NOTE: The `:pom-filename` argument is optional.
+
+## Credentials
+
+s3-repo discovers credentials by looking for them in
+`S3_REPO_USERNAME` and `S3_REPO_PASSPHRASE`. Alternatively, you can
+specify your username and passphrase in the `:username` and
+`:passphrase` keywords, respectively.
 
 ## License
 
