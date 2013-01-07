@@ -6,9 +6,9 @@ A Leiningen plugin to deploy 3rd party jars to an s3 repository.
 
 Use this for user-level plugins:
 
-Put `[lein-s3-repo "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your
+Put `[lein-s3-repo "0.1.0"]` into the `:plugins` vector of your
 `:user` profile, or if you are on Leiningen 1.x do `lein plugin install
-lein-s3-repo 0.1.0-SNAPSHOT`.
+lein-s3-repo 0.1.0`.
 
 Example usage:
 
