@@ -63,9 +63,9 @@ credentials. See
 (https://github.com/technomancy/leiningen/blob/master/doc/DEPLOY.md#authentication).
 
 When run outside a project, s3-repo discovers credentials by looking
-for them in -`S3_REPO_USERNAME` and `S3_REPO_PASSPHRASE`.
+for them in `S3_REPO_USERNAME` and `S3_REPO_PASSPHRASE`.
 Alternatively, you can -specify your username and passphrase in the
-`:username` and -`:passphrase` keywords, respectively.
+`:username` and `:passphrase` keywords, respectively.
 
 ## License
 
