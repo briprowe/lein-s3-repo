@@ -2,7 +2,6 @@
   (:require [leiningen.core.main :as main]
             [leiningen.core.classpath :refer [add-repo-auth]]
             [clojure.java.io :as io]
-            clojure.pprint
             [cemerick.pomegranate.aether :as aether])
   (:import [org.springframework.build.aws.maven SimpleStorageServiceWagon]))
 
