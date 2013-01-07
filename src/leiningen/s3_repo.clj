@@ -2,10 +2,7 @@
   (:require [leiningen.core.main :as main]
             [leiningen.core.classpath :refer [add-repo-auth]]
             [clojure.java.io :as io]
-            [cemerick.pomegranate.aether :as aether])
-  (:import [org.springframework.build.aws.maven SimpleStorageServiceWagon]))
-
-(aether/register-wagon-factory! "s3" #(SimpleStorageServiceWagon.))
+            [cemerick.pomegranate.aether :as aether]))
 
 (def +USERNAME-ENV-VAR+   "S3_REPO_USERNAME")
 (def +PASSPHRASE-ENV-VAR+ "S3_REPO_PASSPHRASE")
@@ -19,38 +16,35 @@
              " specify credentials.")
         :else message))
 
-(defn get-env-auth
-  [creds]
-  (let [username (System/getenv +USERNAME-ENV-VAR+)
-        passphrase (System/getenv +PASSPHRASE-ENV-VAR+)
-        keys (set (keys creds))]
-    (if-not (and
-             (or (clojure.set/subset? #{:username :password} keys)
-                 (clojure.set/subset? #{:username :passphrase} keys))
-             (not (nil? username))
-             (not (nil? passphrase)))
-      (merge creds {:username username :passphrase passphrase})
-      creds)))
+(defn maybe-add
+  "If the value is not nil, add it to the map (indexed by key)."
+  [map [key value]]
+  (if (not (nil? value))
+    (assoc map key value)
+    map))
 
 (defn get-credentials
-  [{:keys [repo] :as args}]
-  (let [creds (select-keys args [:url :username :password :passphrase :private-key-file])]
-    (-> (add-repo-auth [repo creds])
-        second
-        get-env-auth)))
+  [{:keys [url] :as repo}]
+  (reduce maybe-add (second (add-repo-auth [url repo]))
+          {:username (System/getenv +USERNAME-ENV-VAR+)
+           :passphrase (System/getenv +PASSPHRASE-ENV-VAR+)}))
 
 (defn deploy
   "Deploy a given artifact to S3."
   [{:keys [repo url username passphrase coords jar-filename pom-filename] :as args}]
+  (when (empty? repo)
+    (main/abort "Must supply a repository name."))
+  (when (empty? url)
+    (main/abort "Must supply a URL."))
+
   (let [jar-file (when jar-filename (io/file jar-filename))
         pom-file (when pom-filename (io/file pom-filename))
-        coords (read-string coords)
+        coords (if (vector? coords) coords (read-string coords))
         creds (get-credentials args)]
-    (when (empty? repo)
-      (main/abort "Must supply a repository name."))
-    (when (empty? url)
-      (main/abort "Must supply a URL."))
-    (when (empty? coords)
+
+    (when-not (and (vector? coords)
+                   (symbol? (first coords))
+                   (string? (second coords)))
       (main/abort "Must supply a leiningen-style coordinate vector: '[com.acme/product \"1.0.0\"]'"))
     (when-not (and jar-file (.exists jar-file))
       (main/abort "Could not load jar file:" jar-filename))
@@ -93,9 +87,22 @@ deploy Deploy an artifact to S3. You can convey your S3 credentials in the envir
               :username \"LKJOI...\" :passphrase \"lklkasjdl...\"
 "))
 
+(defn merge-repository
+  "If there are credentials provided for the repository listed in the given lib-spec,
+   then add them to the spec."
+  [project lib-spec]
+  (->> (:repositories project)
+       (filter #(= (:repo lib-spec) (first %)))
+       first
+       second
+       (merge lib-spec)))
+
 (defn ^:no-project-needed s3-repo
   "Manage a maven repository hosted on Amazon S3."
-  [_ command & args]
-  (case command
-    "deploy" (apply (comp deploy read-args) args)
-    (print-help)))
+  [project command & args]
+  (if (:3rd-party-jars project)
+    (doseq [lib (:3rd-party-jars project)]
+      (deploy (merge-repository project lib)))
+    (case command
+      "deploy" (apply (comp deploy read-args) args)
+      (print-help))))
