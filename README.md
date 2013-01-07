@@ -13,7 +13,7 @@ lein-s3-repo 0.1.0`.
 Example usage:
 
     $ lein s3-repo deploy :repo com.acme.repo :url s3://com.acme.repo/release \\
-              :coords '[com.acme/product \"1.0.0\"]' :jar-filename product.jar \\
+              :coords '[com.acme/product "1.0.0"]' :jar-filename product.jar \\
               :pom-filename pom.xml
 
 NOTE: The `:pom-filename` argument is optional.
