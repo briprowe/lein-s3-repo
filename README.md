@@ -4,19 +4,19 @@ A Leiningen plugin to deploy 3rd party jars to an s3 repository.
 
 ## Usage
 
-FIXME: Use this for user-level plugins:
+Use this for user-level plugins:
 
 Put `[lein-s3-repo "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your
 `:user` profile, or if you are on Leiningen 1.x do `lein plugin install
 lein-s3-repo 0.1.0-SNAPSHOT`.
 
-FIXME: Use this for project-level plugins:
+Example usage:
 
-Put `[lein-s3-repo "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj.
+    $ lein s3-repo deploy :repo com.acme.repo :url s3://com.acme.repo/release \\
+              :coords '[com.acme/product \"1.0.0\"]' :jar-filename product.jar \\
+              :pom-filename pom.xml
 
-FIXME: and add an example usage that actually makes sense:
-
-    $ lein s3-repo
+NOTE: The `:pom-filename` argument is optional. 
 
 ## License
 
