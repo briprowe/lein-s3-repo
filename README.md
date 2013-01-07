@@ -64,7 +64,7 @@ credentials. See
 
 When run outside a project, s3-repo discovers credentials by looking
 for them in `S3_REPO_USERNAME` and `S3_REPO_PASSPHRASE`.
-Alternatively, you can -specify your username and passphrase in the
+Alternatively, you can specify your username and passphrase in the
 `:username` and `:passphrase` keywords, respectively.
 
 ## License
