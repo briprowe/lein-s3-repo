@@ -6,7 +6,7 @@ A Leiningen plugin to deploy 3rd party jars to an s3 repository.
 
 Use this for user-level plugins:
 
-Put `[lein-s3-repo "0.1.1"]` into the `:plugins` vector of your
+Put `[org.clojars.briprowe/lein-s3-repo "0.1.1"]` into the `:plugins` vector of your
 `:user` profile, or if you are on Leiningen 1.x do `lein plugin install
 lein-s3-repo 0.1.1`.
 
