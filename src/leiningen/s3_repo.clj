@@ -57,7 +57,7 @@
                      :coordinates coords
                      :jar-file jar-file
                      :pom-file pom-file)
-      (catch org.sonatype.aether.deployment.DeploymentException e
+      (catch Exception e
         (when main/*debug* (.printStackTrace e))
         (main/abort (abort-message (.getMessage e)))))))
 
