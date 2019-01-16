@@ -46,18 +46,22 @@
                    (symbol? (first coords))
                    (string? (second coords)))
       (main/abort "Must supply a leiningen-style coordinate vector: '[com.acme/product \"1.0.0\"]'"))
-    (when-not (and jar-file (.exists jar-file))
+
+    (when-not (or jar-file pom-file)
+      (main/abort "Must supply at least jar-filename or pom-filename"))
+    (when (and jar-file (not (.exists jar-file)))
       (main/abort "Could not load jar file:" jar-filename))
     (when (and pom-file (not (.exists pom-file)))
       (main/abort "Could not load pom file:" pom-filename))
-    
+
     (try
-      (main/info "Deploying" jar-filename "to" repo)
+      (when jar-filename (main/info "Deploying" jar-filename "to" repo))
+      (when pom-filename (main/info "Deploying" pom-filename "to" repo))
       (aether/deploy :repository {repo creds}
                      :coordinates coords
                      :jar-file jar-file
                      :pom-file pom-file)
-      (catch org.sonatype.aether.deployment.DeploymentException e
+      (catch Exception e
         (when main/*debug* (.printStackTrace e))
         (main/abort (abort-message (.getMessage e)))))))
 
